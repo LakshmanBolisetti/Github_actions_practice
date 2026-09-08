@@ -1,4 +1,4 @@
-name: this is hello world sample code
+name: First Workflow
 on: workflow_dispatch
 jobs:
   job-1:
@@ -12,7 +12,8 @@ jobs:
 
       - name: Third step for multiple run commands
         run: |
-        id
-        ls
-        printenv
+        ls -l
+        pwd
+        touch lucky{1..10}.txt
+        ls -l
         echo " hello hi"
