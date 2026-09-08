@@ -12,8 +12,10 @@ jobs:
 
       - name: Third step for multiple run commands
         run: |
-        ls -l
-        pwd
-        touch lucky{1..10}.txt
-        ls -l
-        echo " hello hi"
+         whoami
+         id
+         ls -l
+         pwd
+         touch lucky{1..10}.txt
+         ls -l
+         echo " hello hi"
