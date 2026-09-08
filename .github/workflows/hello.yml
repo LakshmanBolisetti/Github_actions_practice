@@ -12,7 +12,7 @@ jobs:
 
       - name: Third step for multiple run commands
         run: |
-        whoami
+        id
         ls
         printenv
         echo " hello hi"
