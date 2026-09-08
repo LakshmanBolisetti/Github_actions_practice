@@ -1,0 +1,11 @@
+name: push event
+on: push
+jobs:
+  job-1:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: 1st step
+        run: echo " this is first step"
+
+      - name: 2nd step
+        run: echo "This is second step"
