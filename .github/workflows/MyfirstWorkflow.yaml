@@ -1,6 +1,7 @@
 name: MyFirstWorkflow
 
-on: workflow_dispatch
+on: [workflow_dispatch, push]
+
 
 jobs:
   job-1:
@@ -9,3 +10,11 @@ jobs:
    steps:
     - name: first step
       run: echo "my first workflow"
+
+    - name: second step
+      run: |
+        echo "this is my second step"
+        whoami
+        ls -la
+        pwd 
+
