@@ -43,6 +43,7 @@ jobs:
             - name: pulling the docker image
               run: |
                docker pull eclipse-temurin:21-jdk
+               docker pull maven:3-eclipse-temurin-21
             
             - name: Build Docker image
               run: docker build -t my-java-app .
