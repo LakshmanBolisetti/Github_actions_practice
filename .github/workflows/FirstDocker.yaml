@@ -42,7 +42,7 @@ jobs:
 
             - name: pulling the docker image
               run: |
-               docker pull openjdk:21-jdk-slim
+               docker pull eclipse-temurin:21-jdk
                docker pull openjdk:21
             
             - name: Build Docker image
