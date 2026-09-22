@@ -39,6 +39,11 @@ jobs:
 
             - name: checking the docker images
               run: docker images
+
+            - name: pulling the docker image
+              run: |
+               docker pull openjdk:21-jdk-slim
+               docker pull openjdk:21
             
             - name: Build Docker image
               run: docker build -t my-java-app .
