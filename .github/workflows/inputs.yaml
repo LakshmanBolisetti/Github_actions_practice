@@ -38,4 +38,4 @@ jobs:
         run: echo "this is my third input ${{ github.event.inputs.my_third_input }}"
 
       - name: calling my selected input
-        run: echo "this is my selected input ${{ github.event.inputs.selected_input }}"
+        run: echo "this is my selected input ${{ inputs.selected_input }}"
