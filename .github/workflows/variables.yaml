@@ -1,4 +1,4 @@
-name: Variables for workflow
+name: Variables and secrets for workflow
 on: workflow_dispatch
 jobs:
   job-1:
@@ -9,3 +9,6 @@ jobs:
 
       - name: calling my second variable
         run: echo "this is my second variable ${{ vars.my_second_variable }}"
+
+      - name: calling my first secret
+        run: echo "this is my first secret ${{ secrets.my_first_secret }}"
