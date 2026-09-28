@@ -1,0 +1,20 @@
+name: using the uses keyword to call the actions from the marketplace
+on: workflow_dispatch
+jobs:
+  job-1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: calling the checkout action
+        uses: actions/checkout@v7
+
+      - name: calling the setup-java action
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: build the java application
+        run: |
+         java -version
+         mvn -version
+         mvn clean install
