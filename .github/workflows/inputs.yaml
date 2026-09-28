@@ -1,0 +1,41 @@
+name: use of inputs in the workflow
+on:
+  workflow_dispatch:
+    inputs:
+      my_first_input:
+        description: 'this is my first input'
+        required: true
+        default: 'this is my first input value'
+      my_second_input:
+        description: 'this is my second input'
+        required: true
+        default: 'this is my second input value'
+      my_third_input:
+        description: 'this is my third input'
+        required: true
+        default: 'this is my third input value'
+      selected_input:
+        description: 'this is my selected input'
+        required: true
+        type: choice
+        default: 'this is my selected input value'
+        options:
+          - 'this is my first option'
+          - 'this is my second option'
+          - 'this is my third option'
+
+jobs:
+  job-1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: calling my first input
+        run: echo "this is my first input ${{ github.event.inputs.my_first_input }}"
+
+      - name: calling my second input
+        run: echo "this is my second input ${{ github.event.inputs.my_second_input }}"
+
+      - name: calling my third input
+        run: echo "this is my third input ${{ github.event.inputs.my_third_input }}"
+
+      - name: calling my selected input
+        run: echo "this is my selected input ${{ github.event.inputs.selected_input }}"
