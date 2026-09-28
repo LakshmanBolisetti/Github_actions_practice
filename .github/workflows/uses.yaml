@@ -24,7 +24,8 @@ jobs:
         run: |
          git config --local user.email "bolisetti33@gmail.com"
          git config --local user.name "Lakshman Bolisetti"
-         git commit -a -m "Add changes from github workflow"
+         git add .
+         git commit -m "Add changes from github workflow"
 
       - name: Push changes
         uses: ad-m/github-push-action@master
