@@ -1,0 +1,14 @@
+name: using environment variables in the workflow
+on: workflow_dispatch
+env:
+  MY_FIRST_ENV: "this is my first environment variable"
+  MY_SECOND_ENV: "this is my second environment variable"
+jobs:
+  job-1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: calling my first environment variable
+        run: echo "this is my first environment variable $MY_FIRST_ENV"
+
+      - name: calling my second environment variable
+        run: echo "this is my second environment variable $MY_SECOND_ENV"
