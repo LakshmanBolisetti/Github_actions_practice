@@ -1,6 +1,9 @@
 name: using the uses keyword to call the actions from the marketplace
 on: workflow_dispatch
 
+permissions:
+  contents: write
+
 jobs:
   job-1:
     runs-on: ubuntu-latest
