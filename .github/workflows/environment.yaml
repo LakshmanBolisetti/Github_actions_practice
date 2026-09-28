@@ -3,6 +3,7 @@ on: workflow_dispatch
 env:
   MY_FIRST_ENV: "this is my first environment variable from the workflow level"
   MY_SECOND_ENV: "this is my second environment variable from the workflow level"
+  MY_THIRD_ENV: "this is my third environment variable from the workflow level"
 jobs:
   job-1:
     env:
@@ -19,3 +20,6 @@ jobs:
 
       - name: calling my second environment variable
         run: echo "this is my second environment variable $MY_SECOND_ENV"
+
+      - name: calling my third environment variable
+        run: echo "this is my third environment variable $MY_THIRD_ENV"
