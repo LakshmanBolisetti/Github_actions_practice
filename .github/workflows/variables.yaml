@@ -1,0 +1,11 @@
+name: Variables for workflow
+on: workflow_dispatch
+jobs:
+  job-1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: calling my first variable
+        run: echo "this is my first variable ${{ vars.my_first_variable }}"
+
+      - name: calling my second variable
+        run: echo "this is my second variable ${{ vars.my_second_variable }}"

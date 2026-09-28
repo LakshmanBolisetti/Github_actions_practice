@@ -1,9 +1,6 @@
 name: creating a workflow for docker image creation of the source code
 
-on:
-  push:
-    branches:
-      - master
+on: workflow_dispatch
 jobs:
     build:
         runs-on: ubuntu-latest
