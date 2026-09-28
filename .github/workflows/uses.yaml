@@ -1,16 +1,14 @@
 name: using the uses keyword to call the actions from the marketplace
 on: workflow_dispatch
 
-permissions:                    # Global permissions configuration starts here
-  contents: write               # 'read' access to repository contents
-  pull-requests: write          # 'write' access to pull requests
-
 jobs:
   job-1:
     runs-on: ubuntu-latest
     steps:
       - name: calling the checkout action
         uses: actions/checkout@v7
+        with:
+            token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: calling the setup-java action
         uses: actions/setup-java@v3
@@ -31,9 +29,4 @@ jobs:
          git config --local user.name "Lakshman Bolisetti"
          git add .
          git commit -m "Add changes from github workflow"
-
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          token: ${{ secrets.APPLICATION_TOKEN }}
-          branch: ${{ github.ref }}
+         git push -u origin master
