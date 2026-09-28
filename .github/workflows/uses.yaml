@@ -10,8 +10,6 @@ jobs:
     steps:
       - name: calling the checkout action
         uses: actions/checkout@v7
-        with:
-            token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: calling the setup-java action
         uses: actions/setup-java@v3
