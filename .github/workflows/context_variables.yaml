@@ -9,8 +9,8 @@ jobs:
         - name: calling github context variable
           run: echo "this is the github context variable ${{ github.event_name }}"
     
-        - name: calling runner context variable
-          run: echo "this is the runner context variable ${{ runner.os }}"
+        - name: calling linux runner env variables
+          run: echo "this is the runner context variable $printenv"
     
         - name: calling multiple context variable
           run: |
