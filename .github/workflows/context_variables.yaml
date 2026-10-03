@@ -1,0 +1,24 @@
+name: using context variables in the workflow
+on:
+  workflow_dispatch:
+
+jobs:
+    job-1:
+        runs-on: ubuntu-latest
+        steps:
+        - name: calling github context variable
+          run: echo "this is the github context variable ${{ github.event_name }}"
+    
+        - name: calling runner context variable
+          run: echo "this is the runner context variable ${{ runner.os }}"
+    
+        - name: calling multiple context variable
+          run: |
+           echo "this is the env context variable ${{ github.workflow}}"
+           echo "this is the github context variable ${{ github.event_name }}"
+           echo "this is the runner context variable ${{ runner.os }}"
+           echo "this is sha context variable ${{ github.sha }}"
+           echo "this is user context variable ${{ github.actor }}"
+           echo "this is repository context variable ${{ github.repository }}"
+           echo "this is ref context variable ${{ github.ref }}"
+           echo "this is will print all the context variables ${{ toJSON(github) }}"
