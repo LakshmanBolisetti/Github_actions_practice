@@ -12,3 +12,10 @@ jobs:
         if: github.ref_name == 'master' || github.ref_name == 'main'
         run: |
           echo "This is the master branch"
+  job-2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: if branch is not master then print this message
+        if: github.ref_name == 'master' && github.event_name == 'workflow_dispatch'
+        run: |
+          echo "This is not the master branch"
