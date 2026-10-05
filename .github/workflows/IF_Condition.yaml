@@ -1,0 +1,14 @@
+name: IF Condition
+on: 
+    push:
+     branches:
+         - main
+         - master
+jobs:
+  job-1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: if branch is master then print this message
+        if: github.ref == 'refs/heads/master'
+        run: |
+          echo "This is the master branch"
