@@ -10,4 +10,5 @@ jobs:
       - name: 2nd step
         run: |
          echo "$date"
+         date +"%b%y" 
          uptime
