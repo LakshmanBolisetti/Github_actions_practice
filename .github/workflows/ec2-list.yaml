@@ -23,8 +23,14 @@ jobs:
           role-to-assume: ${{ secrets.AWS_OIDC_ROLE }}
           aws-region: us-west-2
 
-      - name: List EC2 Instances
+      - name: List s3 buckets
         run: |
           aws s3api list-buckets \
             --query "Buckets[*].Name" \
+            --output table
+
+      - name: List EC2 Instances
+        run: |
+          aws ec2 describe-instances \
+            --query "Reservations[*].Instances[*].InstanceId" \
             --output table
