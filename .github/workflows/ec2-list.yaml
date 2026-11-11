@@ -34,3 +34,9 @@ jobs:
           aws ec2 describe-instances \
             --query "Reservations[*].Instances[*].InstanceId" \
             --output table
+            
+      - name: To get all resources in AWs
+        run: |
+            aws resource-explorer-2 list-resources \
+             --query "Resources[*].[Service,ResourceType,Region,Arn]" \
+             --output table
