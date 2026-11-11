@@ -169,6 +169,7 @@ The AWS trust policy must match GitHub's OIDC `sub` (subject) claim.
 Subject Claim Formats
 
 **1. Immutable subject (repositories created after July 15, 2026):**
+GitHub repositories created after **July 15, 2026** use immutable subject claims by default. The new subject contains both the owner ID and repository ID:
 
 ```text
 repo:OWNER@OWNER_ID/REPOSITORY@REPOSITORY_ID:ref:refs/heads/main
@@ -183,6 +184,8 @@ repo:OWNER/REPOSITORY:ref:refs/heads/main
  Retrieve Owner ID and Repository ID
 
 ![Retrieve Owner ID and Repository ID](https://github.com/LakshmanBolisetti/Github_actions_practice/blob/master/assets/Screenshot%202026-11-11%20155116.png)
+![Retrieve Owner ID and Repository ID Update in AWS](https://github.com/LakshmanBolisetti/Github_actions_practice/blob/master/assets/Screenshot%202026-11-11%20161643.png)
+
 Review the role configuration and create it. This role defines what the GitHub Actions workflow is allowed to do in the AWS account.
 
 ### Step 3: Add the IAM role ARN to GitHub
