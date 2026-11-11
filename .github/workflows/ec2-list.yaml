@@ -37,6 +37,11 @@ jobs:
             
       - name: To get all resources in AWs
         run: |
-            aws resource-explorer-2 list-resources \
-             --query "Resources[*].[Service,ResourceType,Region,Arn]" \
-             --output table
+           for region in $(aws ec2 describe-regions --query "Regions[*].RegionName" --output text); do
+              echo "=== Region: $region ==="
+              aws resourcegroupstaggingapi get-resources \
+              --region "$region" \
+              --query "ResourceTagMappingList[*].ResourceARN" \
+              --output table
+              done
+
