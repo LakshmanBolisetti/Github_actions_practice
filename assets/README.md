@@ -162,14 +162,11 @@ Give the role a name, for example:
 github-actions-workflow-role
 ```
 
-Review the role configuration and create it. This role defines what the GitHub Actions workflow is allowed to do in the AWS account.
-
-
-## 5. Get the identifiers needed for the trust policy
+Get the identifiers needed for the trust policy
 
 The AWS trust policy must match GitHub's OIDC `sub` (subject) claim.
 
-### Subject Claim Formats
+Subject Claim Formats
 
 **1. Immutable subject (repositories created after July 15, 2026):**
 
@@ -183,18 +180,10 @@ repo:OWNER@OWNER_ID/REPOSITORY@REPOSITORY_ID:ref:refs/heads/main
 repo:OWNER/REPOSITORY:ref:refs/heads/main
 ```
 
-### Retrieve Owner ID and Repository ID
+ Retrieve Owner ID and Repository ID
 
-![Retrieve Owner ID and Repository ID]([https://github.com/LakshmanBolisetti/Github_actions_practice/blob/master/assets/Screenshot%202026-11-11%20155116.png])
-
-### Important Notes
-
-- Use the exact OIDC `sub` format issued by your GitHub repository.
-- Older repositories generally use the traditional format unless immutable claims are enabled.
-- Repository renames or transfers may also result in immutable subject claims.
-- If using GitHub Environments (e.g., `production`), the `sub` format changes. Update the AWS trust policy accordingly.
-- Never guess the subject format; verify the actual token claim before configuring AWS IAM.
-
+![Retrieve Owner ID and Repository ID](https://github.com/LakshmanBolisetti/Github_actions_practice/blob/master/assets/Screenshot%202026-11-11%20155116.png)
+Review the role configuration and create it. This role defines what the GitHub Actions workflow is allowed to do in the AWS account.
 
 ### Step 3: Add the IAM role ARN to GitHub
 
