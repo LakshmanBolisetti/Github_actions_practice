@@ -1,0 +1,30 @@
+name: List EC2 Instances
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  list-ec2:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE }}
+          aws-region: us-west-2
+
+      - name: List EC2 Instances
+        run: |
+          aws s3api list-buckets \
+            --query "Buckets[*].Name" \
+            --output table
