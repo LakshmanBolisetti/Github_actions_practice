@@ -2,7 +2,7 @@
 
 A practical, step-by-step guide to connect **GitHub Actions to AWS using OpenID Connect (OIDC)** without storing long-lived AWS access keys in GitHub Secrets.
 
-> The diagrams in `assets/` are original explanatory illustrations of the settings and architecture. They are not screenshots of a live AWS account; AWS Console labels and layouts can change over time.
+> **Images in this README:** These are original, unmodified screenshots and diagrams embedded from their publishing sources (AWS articles, technical guides, and documentation examples). They are not generated or redrawn for this README. Console layouts can change over time; always follow the current AWS documentation if a label differs.
 
 We will implement this in two phases:
 
@@ -57,7 +57,9 @@ You do **not** need to save an AWS access key or secret in GitHub Secrets for th
 
 ### How GitHub Actions communicates with AWS
 
-![GitHub Actions to AWS OIDC authentication flow](assets/github-aws-oidc-overview.svg)
+![Original GitHub Actions to AWS OIDC authentication diagram](https://miro.medium.com/v2/resize%3Afit%3A1133/1%2AQWRbRfg5EzG00YKY8ggoaw.png)
+
+*Image source: [Yahya Mohamed – How to Connect GitHub Actions with AWS Without Storing Long-Lived Secrets](https://medium.com/%40yahmo/how-to-connect-github-actions-with-aws-without-storing-long-lived-secrets-dcef33a17c1e).*
 
 The flow is:
 
@@ -80,8 +82,6 @@ The trust policy does not grant S3 or EKS access by itself. The permission polic
 ---
 
 ## 2. Overall implementation plan
-
-![Two-phase implementation: S3 validation followed by EKS access](assets/two-phase-plan.svg)
 
 ### Phase 1 – Basic AWS connection using S3
 
@@ -170,7 +170,9 @@ An **OIDC identity provider** tells AWS that GitHub is a trusted token issuer. Y
 
 7. Choose **Add provider**.
 
-![AWS IAM OIDC identity provider setup reference](assets/iam-oidc-provider-reference.svg)
+![Original AWS IAM Add identity provider console screenshot showing OpenID Connect, the GitHub provider URL, and the audience](https://storage.ghost.io/c/5f/2f/5f2f4d20-2abf-4534-8d40-7aa233aedd43/content/images/2025/05/image-19.png)
+
+*Image source: [DevOpsCube – How to Configure GitHub Actions OIDC with AWS](https://devopscube.com/github-actions-oidc-aws/).*
 
 ### Expected result
 
@@ -383,7 +385,9 @@ We use Amazon S3 as the first AWS service because it lets us verify a real opera
 7. Leave other settings at their defaults for this test unless your organization requires different settings.
 8. Choose **Create bucket**.
 
-![S3 bucket setup reference](assets/s3-bucket-reference.svg)
+![Original Amazon S3 Create bucket console screenshot](https://d2908q01vomqb2.cloudfront.net/5b384ce32d8cdef02bc3a139d4cac0a22bb029e8/2022/07/01/S3-Bucket.jpg)
+
+*Image source: [AWS Networking & Content Delivery Blog – Introducing VPC Flow Logs for AWS Transit Gateway](https://aws.amazon.com/blogs/networking-and-content-delivery/introducing-vpc-flow-logs-for-aws-transit-gateway/).*
 
 ### Expected result
 
@@ -584,7 +588,9 @@ That is the main benefit of using OIDC instead of long-lived access keys.
 4. Select **Run workflow** and choose the `main` branch.
 5. Open the workflow run and review each step.
 
-![Phase 1: GitHub Actions authenticates to AWS and uploads a test object to S3](assets/phase-1-s3-validation.svg)
+![Original Amazon S3 bucket Objects tab screenshot showing objects in a bucket](https://pabis.eu/assets/aws/uploaded-files.jpg)
+
+*Image source: [Pabis – How to tag S3 objects that were uploaded with a presigned URL](https://pabis.eu/blog/2023-07-01-Tag-S3-Objects-Uploaded-Presigned-URL.html). The object names in the screenshot are illustrative; your test object should be `oidc-test/oidc-test.txt`.*
 
 ### Validation 1 – Verify AWS authentication
 
@@ -668,7 +674,9 @@ We will reuse the GitHub OIDC identity provider and IAM role from Phase 1. We do
 
 However, EKS has an additional authorization layer. A successful AWS role assumption does not automatically authorize that IAM role to access Kubernetes resources.
 
-![GitHub Actions to EKS: IAM authentication and Kubernetes authorization](assets/phase-2-eks-access.svg)
+![Original Amazon EKS console screenshot showing the IAM access-entry configuration form](https://assets.community.aws/a/2aZWQU5krYbuuNlh57TxyuXBpHC.png?imgSize=816x759)
+
+*Image source: [AWS Builder Center – Simplified Amazon EKS Cluster Access Management Using EKS APIs and AWS Console](https://builder.aws.com/content/2aWo77epP0lbfrWhnqTpWzSSXyu/simplified-amazon-eks-cluster-access-management-using-eks-apis-and-aws-console).*
 
 The EKS flow is:
 
@@ -786,7 +794,9 @@ To create Access Entries, the cluster must use either `API_AND_CONFIG_MAP` or `A
 3. Save the change.
 4. Wait until the cluster status returns to **Active**.
 
-![EKS Access Entries reference](assets/eks-access-entries-reference.svg)
+![Original Amazon EKS console screenshot showing Cluster authentication mode options](https://easontechtalk.com/assets/images/2024/recover-permission-using-eks-cluster-access-entry/cover.png)
+
+*Image source: [Eason Tech Talk – Recover cluster permission with EKS Access Entry](https://easontechtalk.com/recover-permission-using-eks-cluster-access-entry/).*
 
 ### Optional AWS CLI check
 
@@ -840,6 +850,16 @@ Now register the IAM role created earlier as an EKS Access Entry.
    | Namespace | `default` |
 
 7. Add the policy and complete the access-entry creation.
+
+**Reference screenshots:** The first image shows the EKS access-entry form. The second shows the access-policy selection and namespace-scope controls.
+
+![Original Amazon EKS console screenshot showing the IAM principal and Standard access-entry type](https://assets.community.aws/a/2aZWQU5krYbuuNlh57TxyuXBpHC.png?imgSize=816x759)
+
+*Image source: [AWS Builder Center – Simplified Amazon EKS Cluster Access Management Using EKS APIs and AWS Console](https://builder.aws.com/content/2aWo77epP0lbfrWhnqTpWzSSXyu/simplified-amazon-eks-cluster-access-management-using-eks-apis-and-aws-console).*
+
+![Original EKS console screenshot showing the Add access policy page and Kubernetes namespace scope](https://cdn.hashnode.com/res/hashnode/image/upload/v1722779821525/cbb81c67-17ca-4e7d-91f2-e1f27c591dc9.png)
+
+*Image source: [Krati K. – EKS IAM Access Entries](https://blogs.kratik.dev/how-to-use-aws-eks-iam-access-entries).*
 
 ### Why start with AmazonEKSViewPolicy?
 
@@ -1021,7 +1041,9 @@ This sends a Kubernetes API request to the EKS cluster. EKS authenticates the IA
 4. Choose **Run workflow** and select the `main` branch, or push a commit to `main`.
 5. Open the run and inspect each step.
 
-![Phase 2: GitHub Actions assumes an IAM role, authenticates to EKS, and lists pods](assets/phase-2-eks-access.svg)
+![Original GitHub Actions workflow summary screenshot showing a successful workflow run](https://dz2cdn1.dzone.com/storage/temp/15480691-github-actions-figure-4.jpg)
+
+*Image source: [DZone – Getting Started With GitHub Actions](https://dzone.com/refcardz/getting-started-with-github-actions). This is an example workflow screenshot, not a run from your repository.*
 
 ### Expected results
 
@@ -1042,6 +1064,12 @@ nginx-deployment-xxxxx          1/1     Running   0
 
 The command can also succeed when there are no pods, in which case it prints the column headers and no pod rows.
 
+Example terminal output from an EKS cluster (your pod names, namespaces, and statuses will differ):
+
+![Original kubectl get pods output from an EKS cluster](https://docs.ravendb.net/assets/images/aws-eks10-0776a0e72bfbde1d286266d4dba757eb.webp)
+
+*Image source: [RavenDB documentation – Setting Up RavenDB Cluster on AWS EKS](https://docs.ravendb.net/guides/setting-up-ravendb-cluster-on-aws-eks).*
+
 ### Phase 2 success criteria
 
 - [ ] The workflow successfully assumes `GitHubActionsOIDCRole`.
@@ -1058,7 +1086,9 @@ The command can also succeed when there are no pods, in which case it prints the
 
 You will encounter another OIDC configuration when learning Amazon EKS. Do not confuse the two identity flows.
 
-![Comparison of GitHub OIDC and EKS OIDC IRSA identity flows](assets/github-oidc-vs-irsa.svg)
+![Original Amazon EKS IAM Roles for Service Accounts (IRSA) architecture diagram](https://miro.medium.com/v2/resize%3Afit%3A770/1%2AeFfKhBin6cL39BSg1zfDFA.png)
+
+*Image source: [Anvesh Muppeda – A Hands-On Guide to AWS EKS IAM Roles for Service Accounts (IRSA)](https://medium.com/%40muppedaanvesh/a-hands-on-guide-to-aws-eks-iam-roles-for-service-accounts-irsa-%EF%B8%8F-558c7a3e7c69).*
 
 | Feature | GitHub OIDC | EKS OIDC / IRSA |
 |---|---|---|
@@ -1144,9 +1174,7 @@ When EKS access fails, check in this order:
 
 ## 19. Final architecture
 
-![Complete architecture: one GitHub OIDC role is first validated with S3 and then authorized to access EKS](assets/github-aws-oidc-overview.svg)
-
-The completed setup looks like this:
+The text flow below summarizes the completed setup. The original GitHub-to-AWS OIDC diagram is shown in [Section 1](#1-what-is-oidc-and-why-use-it), and the original EKS IRSA diagram is shown in [Section 17](#17-github-oidc-vs-eks-oidc--irsa). The completed setup looks like this:
 
 ```text
 GitHub repository
@@ -1229,6 +1257,27 @@ For an initial deployment test, use a narrowly scoped EKS access policy for the 
 - [ ] Do not expose a private EKS API endpoint to the public internet to make GitHub-hosted runners connect.
 - [ ] Review action versions regularly; consider pinning actions to verified full commit SHAs.
 - [ ] Review CloudTrail and GitHub Actions logs if you need to audit access.
+
+---
+
+## Image sources and attribution
+
+The images embedded in this README are original, unmodified images hosted by their respective publishers. They are included as remote image links so the README does not contain custom-generated illustrations. Please refer to the original pages for publisher attribution, context, and any reuse terms.
+
+| Image | Original source |
+|---|---|
+| GitHub Actions to AWS OIDC architecture | [Yahya Mohamed – Medium](https://medium.com/%40yahmo/how-to-connect-github-actions-with-aws-without-storing-long-lived-secrets-dcef33a17c1e) |
+| AWS IAM OIDC identity provider form | [DevOpsCube](https://devopscube.com/github-actions-oidc-aws/) |
+| Amazon S3 Create bucket screen | [AWS Networking & Content Delivery Blog](https://aws.amazon.com/blogs/networking-and-content-delivery/introducing-vpc-flow-logs-for-aws-transit-gateway/) |
+| Amazon S3 objects listing | [Pabis](https://pabis.eu/blog/2023-07-01-Tag-S3-Objects-Uploaded-Presigned-URL.html) |
+| EKS IAM access-entry form | [AWS Builder Center](https://builder.aws.com/content/2aWo77epP0lbfrWhnqTpWzSSXyu/simplified-amazon-eks-cluster-access-management-using-eks-apis-and-aws-console) |
+| EKS cluster authentication mode | [Eason Tech Talk](https://easontechtalk.com/recover-permission-using-eks-cluster-access-entry/) |
+| EKS access-policy scope | [Krati K.](https://blogs.kratik.dev/how-to-use-aws-eks-iam-access-entries) |
+| GitHub Actions workflow run example | [DZone](https://dzone.com/refcardz/getting-started-with-github-actions) |
+| `kubectl get pods` example output | [RavenDB documentation](https://docs.ravendb.net/guides/setting-up-ravendb-cluster-on-aws-eks) |
+| EKS IRSA architecture | [Anvesh Muppeda – Medium](https://medium.com/%40muppedaanvesh/a-hands-on-guide-to-aws-eks-iam-roles-for-service-accounts-irsa-%EF%B8%8F-558c7a3e7c69) |
+
+> These are reference screenshots and diagrams from the cited sources. They are not live screenshots of your AWS account or GitHub repository. Follow the written steps and verify each setting in your own environment.
 
 ---
 
