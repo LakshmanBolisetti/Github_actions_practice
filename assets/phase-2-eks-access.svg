@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+<title id="title">Phase 2 GitHub Actions to Amazon EKS</title><desc id="desc">GitHub OIDC authenticates the GitHub Actions runner to AWS IAM. The role calls DescribeCluster and obtains an EKS token. EKS Access Entry and ViewPolicy authorize kubectl read access.</desc>
+<defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3z" fill="#53657a"/></marker><style>.h{font:700 27px Arial;fill:#12263a}.t{font:700 18px Arial;fill:#12263a}.s{font:15px Arial;fill:#41556b}.n{stroke:#8da0b5;stroke-width:2;rx:16}.ar{stroke:#53657a;stroke-width:3;fill:none;marker-end:url(#a)}</style></defs>
+<rect width="1200" height="620" fill="#f5f8fc"/><text x="600" y="48" class="h" text-anchor="middle">Phase 2 — GitHub Actions authenticates to EKS</text>
+<rect x="60" y="105" width="250" height="105" fill="#e8f0ff" class="n"/><text x="185" y="145" class="t" text-anchor="middle">GitHub Actions</text><text x="185" y="177" class="s" text-anchor="middle">GitHub OIDC JWT</text>
+<path d="M310 157 H370" class="ar"/>
+<rect x="380" y="105" width="250" height="105" fill="#e9f7ee" class="n"/><text x="505" y="145" class="t" text-anchor="middle">AWS IAM + STS</text><text x="505" y="177" class="s" text-anchor="middle">Assume IAM role</text>
+<path d="M630 157 H690" class="ar"/>
+<rect x="700" y="105" width="250" height="105" fill="#fff3df" class="n"/><text x="825" y="145" class="t" text-anchor="middle">IAM role</text><text x="825" y="177" class="s" text-anchor="middle">eks:DescribeCluster</text>
+<path d="M825 210 V270" class="ar"/>
+<rect x="700" y="280" width="250" height="105" fill="#f1eaff" class="n"/><text x="825" y="320" class="t" text-anchor="middle">AWS CLI / kubeconfig</text><text x="825" y="352" class="s" text-anchor="middle">aws eks get-token</text>
+<path d="M700 332 H590 V465" class="ar"/>
+<rect x="330" y="475" width="520" height="105" fill="#e8f0ff" class="n"/><text x="590" y="515" class="t" text-anchor="middle">EKS Kubernetes API server</text><text x="590" y="547" class="s" text-anchor="middle">IAM role identity → Access Entry → AmazonEKSViewPolicy</text>
+<path d="M950 332 H1030 V465" class="ar"/>
+<rect x="900" y="475" width="250" height="105" fill="#ecf8ef" class="n"/><text x="1025" y="515" class="t" text-anchor="middle">Kubernetes resources</text><text x="1025" y="547" class="s" text-anchor="middle">kubectl get pods -n default</text>
+</svg>

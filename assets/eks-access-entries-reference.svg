@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="470" viewBox="0 0 1100 470" role="img" aria-labelledby="title desc">
+<title id="title">EKS Access Entry configuration reference</title><desc id="desc">Create a standard access entry for the IAM role and associate AmazonEKSViewPolicy scoped to the default namespace.</desc>
+<defs><style>.h{font:700 26px Arial;fill:#12263a}.l{font:700 16px Arial;fill:#334b62}.v{font:16px Arial;fill:#12263a}.b{fill:#fff;stroke:#9aabbd;stroke-width:2;rx:9}.tag{font:700 15px Arial;fill:#166534}</style></defs>
+<rect width="1100" height="470" fill="#f5f8fc"/><text x="550" y="52" class="h" text-anchor="middle">Amazon EKS — Create access entry (example)</text>
+<rect x="105" y="85" width="890" height="335" rx="18" fill="#fff" stroke="#94a6ba" stroke-width="2"/>
+<text x="150" y="135" class="l">IAM principal ARN</text><rect x="150" y="150" width="800" height="43" class="b"/><text x="170" y="178" class="v">arn:aws:iam::AWS_ACCOUNT_ID:role/GitHubActionsOIDCRole</text>
+<text x="150" y="228" class="l">Type</text><rect x="150" y="242" width="800" height="43" class="b"/><text x="170" y="270" class="v">Standard</text>
+<text x="150" y="320" class="l">Associate access policy</text><rect x="150" y="334" width="390" height="43" class="b"/><text x="170" y="362" class="v">AmazonEKSViewPolicy</text><rect x="560" y="334" width="390" height="43" class="b"/><text x="580" y="362" class="v">Namespace: default</text>
+<text x="550" y="402" text-anchor="middle" class="tag">Read-only learning example — not cluster administrator access</text>
+</svg>

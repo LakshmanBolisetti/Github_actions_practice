@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="530" viewBox="0 0 1200 530" role="img" aria-labelledby="title desc">
+<title id="title">GitHub OIDC versus EKS OIDC IRSA</title><desc id="desc">GitHub OIDC connects a GitHub Actions workflow to an IAM role. EKS OIDC IRSA connects a Kubernetes pod service account to an IAM role.</desc>
+<defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3z" fill="#53657a"/></marker><style>.h{font:700 27px Arial;fill:#12263a}.t{font:700 19px Arial;fill:#12263a}.s{font:15px Arial;fill:#41556b}.n{stroke:#8da0b5;stroke-width:2;rx:15}.ar{stroke:#53657a;stroke-width:3;fill:none;marker-end:url(#a)}</style></defs>
+<rect width="1200" height="530" fill="#f5f8fc"/><text x="600" y="48" class="h" text-anchor="middle">Two different OIDC identity flows</text>
+<rect x="55" y="90" width="520" height="390" fill="#eaf2ff" class="n"/><text x="315" y="130" class="t" text-anchor="middle">GitHub OIDC</text>
+<rect x="150" y="155" width="330" height="65" fill="#fff" class="n"/><text x="315" y="195" class="t" text-anchor="middle">GitHub Actions job</text><path d="M315 220 V260" class="ar"/>
+<rect x="150" y="270" width="330" height="65" fill="#fff" class="n"/><text x="315" y="310" class="t" text-anchor="middle">GitHub OIDC provider</text><path d="M315 335 V375" class="ar"/>
+<rect x="150" y="385" width="330" height="65" fill="#fff" class="n"/><text x="315" y="425" class="t" text-anchor="middle">AWS IAM role → AWS / EKS</text>
+<rect x="625" y="90" width="520" height="390" fill="#ecf8ef" class="n"/><text x="885" y="130" class="t" text-anchor="middle">EKS OIDC / IRSA</text>
+<rect x="720" y="155" width="330" height="65" fill="#fff" class="n"/><text x="885" y="195" class="t" text-anchor="middle">Kubernetes pod</text><path d="M885 220 V260" class="ar"/>
+<rect x="720" y="270" width="330" height="65" fill="#fff" class="n"/><text x="885" y="310" class="t" text-anchor="middle">EKS OIDC provider</text><path d="M885 335 V375" class="ar"/>
+<rect x="720" y="385" width="330" height="65" fill="#fff" class="n"/><text x="885" y="425" class="t" text-anchor="middle">IAM role → AWS services</text>
+</svg>

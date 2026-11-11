@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="430" viewBox="0 0 1100 430" role="img" aria-labelledby="title desc">
+<title id="title">Amazon S3 bucket setup reference</title><desc id="desc">Example S3 bucket name, region, and public access block remain enabled.</desc>
+<defs><style>.h{font:700 26px Arial;fill:#12263a}.l{font:700 17px Arial;fill:#334b62}.v{font:17px Arial;fill:#12263a}.b{fill:#fff;stroke:#9aabbd;stroke-width:2;rx:10}.ok{font:700 16px Arial;fill:#14723a}</style></defs>
+<rect width="1100" height="430" fill="#f5f8fc"/><text x="550" y="52" class="h" text-anchor="middle">Amazon S3 — Create bucket (example fields)</text>
+<rect x="140" y="85" width="820" height="300" rx="18" fill="#fff" stroke="#94a6ba" stroke-width="2"/>
+<text x="190" y="135" class="l">Bucket name (must be globally unique)</text><rect x="190" y="150" width="720" height="48" class="b"/><text x="215" y="181" class="v">github-oidc-test-123456789012</text>
+<text x="190" y="230" class="l">AWS Region</text><rect x="190" y="245" width="720" height="48" class="b"/><text x="215" y="276" class="v">Asia Pacific (Mumbai) — ap-south-1</text>
+<text x="190" y="325" class="l">Block all public access</text><text x="500" y="325" class="ok">✓ Keep enabled</text><text x="190" y="360" class="v">Keep the bucket private for this exercise.</text>
+</svg>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="430" viewBox="0 0 1100 430" role="img" aria-labelledby="title desc">
+<title id="title">AWS IAM OIDC provider configuration reference</title><desc id="desc">The provider type is OpenID Connect, the provider URL is token.actions.githubusercontent.com and the audience is sts.amazonaws.com.</desc>
+<defs><style>.h{font:700 26px Arial;fill:#12263a}.l{font:700 17px Arial;fill:#334b62}.v{font:17px Arial;fill:#12263a}.b{fill:#fff;stroke:#9aabbd;stroke-width:2;rx:10}</style></defs>
+<rect width="1100" height="430" fill="#f5f8fc"/><text x="550" y="52" class="h" text-anchor="middle">IAM → Identity providers → Add provider</text>
+<rect x="160" y="90" width="780" height="285" rx="18" fill="#ffffff" stroke="#94a6ba" stroke-width="2"/>
+<text x="205" y="140" class="l">Provider type</text><rect x="205" y="155" width="690" height="48" class="b"/><text x="230" y="186" class="v">OpenID Connect</text>
+<text x="205" y="238" class="l">Provider URL</text><rect x="205" y="253" width="690" height="48" class="b"/><text x="230" y="284" class="v">https://token.actions.githubusercontent.com</text>
+<text x="205" y="336" class="l">Audience</text><rect x="390" y="308" width="505" height="48" class="b"/><text x="415" y="339" class="v">sts.amazonaws.com</text>
+</svg>
