@@ -911,3 +911,458 @@ git commit -m 'feat: add OIDC-based EKS deployment workflow'
 git push origin main
 ```
 
+
+
+## STEP-1 Create a Central Tools Folder (Best Practice)
+
+Run:
+```
+mkdir C:\DevOpsTools
+```
+We will keep all CLI binaries here.
+This makes management and uninstall easy.
+
+## STEP-2 Install AWS CLI (Official Installer)
+
+Run:
+```
+msiexec.exe /i https://awscli.amazonaws.com/AWSCLIV2.msi
+```
+After install verify:
+```
+aws --version
+```
+Expected:
+```
+aws-cli/2.x.x Python/3.x Windows
+```
+AWS CLI automatically adds itself to PATH.
+
+## STEP-3 Install kubectl (Manual Binary Method)
+
+Run:
+```
+curl.exe -LO https://dl.k8s.io/release/v1.33.0/bin/windows/amd64/kubectl.exe
+```
+Move it:
+```
+move kubectl.exe C:\DevOpsTools\
+```
+Verify:
+```
+C:\DevOpsTools\kubectl.exe version --client
+```
+
+## STEP-4 Install Helm CLI
+
+Run:
+```
+curl.exe -LO https://get.helm.sh/helm-v3.15.0-windows-amd64.zip
+```
+Then extract:
+```
+tar -xf helm-v3.15.0-windows-amd64.zip
+```
+Move helm:
+```
+move windows-amd64\helm.exe C:\DevOpsTools\
+```
+
+## STEP-5 Install eksctl CLI
+
+Run:
+```
+curl.exe -LO https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_Windows_amd64.zip
+```
+Extract:
+```
+tar -xf eksctl_Windows_amd64.zip
+```
+Move:
+```
+move eksctl.exe C:\DevOpsTools\
+```
+
+## STEP-6 Add DevOpsTools Folder to PATH (CRITICAL)
+
+Open VS code with admin &
+Run this PowerShell command:
+```
+[Environment]::SetEnvironmentVariable("Path",$env:Path + ";C:\DevOpsTools",[EnvironmentVariableTarget]::Machine)
+```
+
+## STEP-7 Verify All Tools
+
+Run one by one:
+```
+aws --version
+kubectl version --client
+helm version
+eksctl version
+```
+All must work without full path.
+
+## Step-1: Login to AWS Console (root or existing admin)
+
+* Open AWS Console
+* Sign in using root user or an IAM admin user
+
+## Step-2: Open IAM Service
+
+* In AWS search bar type → IAM
+* Click Identity and Access Management
+
+## Step-3: Create IAM Group (Administrator group)
+
+* In left sidebar click User groups
+* Click Create group
+* Enter group name:
+```
+admins
+```
+* Under Attach permissions policiessearch and select:
+```
+AdministratorAccess
+```
+* Click Create group
+
+## Step-4: Create IAM User
+
+* In left sidebar click Users
+* Click Create user
+* Enter user name:
+```
+devops-user
+```
+* Click Next
+
+## Step-5: Set permissions for user
+
+* Select option:
+```
+Add user to group
+```
+* Choose group:
+```
+admins
+```
+* Click Next → Create user
+User is now created with administrator permissions.
+
+## Step-6: Create Access Keys (for CLI / VS Code)
+
+* Open the created user → go to Security credentials tab
+* Scroll to Access keys
+* Click Create access key
+* Choose:
+```
+Command Line Interface (CLI)
+```
+* Confirm checkbox
+* Click Next → Create
+You will get:
+* Access Key ID
+* Secret Access Key
+Download .csv or copy safely.
+
+## Step-7: Configure AWS CLI in VS Code terminal
+
+Open VS Code terminal and run:
+```
+aws configure
+```
+Enter values:
+```
+AWS Access Key ID: <paste>
+AWS Secret Access Key: <paste>
+Default region name: ap-south-1
+Default output format: json
+```
+
+## Step-8: Verify configuration
+
+Run:
+```
+aws sts get-caller-identity
+```
+You should see:
+* Account ID
+* IAM user ARN
+This confirms CLI is correctly configured.
+`aws sts get-caller-identity` is an AWS CLI command used to verify which AWS identity (user / role) is currently authenticated.
+It calls the AWS Security Token Service (STS) and returns details about the active credentials.
+
+## Create the EKS cluster
+
+Run:
+```
+eksctl create cluster --name my-cluster --region ap-south-1 --nodegroup-name my-nodegroup --node-type t3a.xlarge --nodes 2 --nodes-min 2 --nodes-max 4 --managed
+```
+What this will do:
+* create the EKS control plane
+* create the managed node group
+* create required networking and IAM resources
+* update your kubeconfig automatically
+This step usually takes several minutes.
+
+## 2. Verify cluster access
+
+After cluster creation completes, run:
+```
+kubectl get nodes
+```
+You should see your worker node in Ready state.
+You can also verify current context:
+```
+kubectl config current-context
+```
+
+## 3. Create your application namespace
+
+Run:
+```
+kubectl create namespace qa
+```
+or short form:
+```
+kubectl create ns qa
+```
+
+## 4. Verify namespace
+
+```
+kubectl get ns
+```
+You should see project in the list.
+
+## For Deleting The Cluster
+
+```
+eksctl delete cluster --name my-cluster --region ap-south-1
+```
+
+
+# GitHub OIDC-Based Secure Deployment Architecture for EKS
+
+Your final auth flow is:
+* GitHub Actions gets an OIDC token from GitHub
+* AWS IAM trusts that token only for your repo + main branch
+* GitHub Actions assumes an IAM role
+* That IAM role is granted EKS API access using an EKS access entry
+* GitHub Actions runs:
+  * `aws eks update-kubeconfig`
+  * `kubectl` deploys into namespace `project`
+
+This avoids long-lived kubeconfig secrets and avoids expiring ServiceAccount tokens in GitHub secrets. AWS and GitHub both document OIDC-based short-lived credentials as the preferred pattern here.
+
+## 3) Preconditions
+
+Before doing anything, make sure:
+* AWS CLI is logged in and working
+* you are using an IAM principal allowed to manage IAM + EKS access entries
+* your EKS cluster is active
+* cluster authentication mode is `API_AND_CONFIG_MAP` or `API`, because access entries require that
+
+Check:
+```bash
+aws sts get-caller-identity
+aws eks describe-cluster --name my-cluster --region ap-south-1 --query "{status:cluster.status,authMode:cluster.accessConfig.authenticationMode}" --output json
+```
+
+Expected:
+* `status = ACTIVE`
+* `authMode = API_AND_CONFIG_MAP` or `API`
+
+## 4) Create the GitHub OIDC provider in AWS IAM
+
+First check whether it already exists:
+```bash
+aws iam list-open-id-connect-providers --query "OpenIDConnectProviderList[?contains(Arn, 'token.actions.githubusercontent.com')].Arn" --output text
+```
+
+To delete if already exists:
+```bash
+aws iam delete-open-id-connect-provider --open-id-connect-provider-arn arn:aws:iam::551322107788:oidc-provider/token.actions.githubusercontent.com
+```
+
+If nothing comes back, create it:
+```bash
+aws iam create-open-id-connect-provider --url https://token.actions.githubusercontent.com --client-id-list sts.amazonaws.com --thumbprint-list 6938fd4d98bab03faadb97b34396831e3780aea1
+```
+
+GitHub’s OIDC docs specify:
+* provider URL: `https://token.actions.githubusercontent.com`
+* audience: `sts.amazonaws.com` for the official AWS action.
+
+```bash
+aws iam create-open-id-connect-provider --url https://token.actions.githubusercontent.com --client-id-list sts.amazonaws.com --thumbprint-list ...
+```
+This creates an IAM OIDC identity provider for GitHub Actions. It tells AWS, “trust tokens issued by token.actions.githubusercontent.com.” That is used when a GitHub Actions workflow assumes an IAM role using `sts:AssumeRoleWithWebIdentity`. GitHub’s docs and AWS IAM docs describe this setup for federating GitHub workflows into AWS.
+
+```bash
+eksctl utils associate-iam-oidc-provider --cluster my-cluster --region ap-south-1 --approve
+```
+This creates or associates the IAM OIDC identity provider for your EKS cluster’s own issuer URL, not GitHub’s. It is used for IRSA so Kubernetes service accounts inside the cluster can assume IAM roles. AWS EKS documentation explicitly uses this step when enabling IAM roles for service accounts on a cluster.
+
+## 5) Create the IAM trust policy JSON correctly
+
+### Correct approach
+Use ASCII output so AWS CLI does not choke on BOM/encoding issues.
+
+Create the trust policy file with this exact command:
+```powershell
+'{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"Federated":"arn:aws:iam::551322107788:oidc-provider/token.actions.githubusercontent.com"},"Action":"sts:AssumeRoleWithWebIdentity","Condition":{"StringEquals":{"token.actions.githubusercontent.com:aud":"sts.amazonaws.com"},"StringLike":{"token.actions.githubusercontent.com:sub":"repo:jaiswaladi246/3-Tier-User-Platform-Project:ref:refs/heads/qa"}}}]}' | Out-File -FilePath .\github-oidc-trust.json -Encoding ascii
+```
+
+Verify it:
+```powershell
+Get-Content .\github-oidc-trust.json
+```
+
+It must show:
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Federated": "arn:aws:iam::551322107788:oidc-provider/token.actions.githubusercontent.com"
+      },
+      "Action": "sts:AssumeRoleWithWebIdentity",
+      "Condition": {
+        "StringEquals": {
+          "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
+        },
+        "StringLike": {
+          "token.actions.githubusercontent.com:sub": "repo:jaiswaladi246/3-Tier-User-Platform-Project:ref:refs/heads/qa"
+        }
+      }
+    }
+  ]
+}
+```
+
+Why this matters:
+* the Federated principal must be the OIDC provider ARN
+* the `sub` condition should scope access to your repo/branch
+* AWS and GitHub both recommend evaluating the `sub` condition in the trust policy to limit which workflows can assume the role.
+
+## 6) Create the IAM role
+
+```bash
+aws iam create-role --role-name GitHubActionsEKSDeployRoleQA --assume-role-policy-document file://github-oidc-trust.json
+```
+
+Verify:
+```bash
+aws iam get-role --role-name GitHubActionsEKSDeployRoleQA
+```
+
+## 7) Create the IAM policy for eks:DescribeCluster
+
+`aws eks update-kubeconfig` needs permission to call `eks:DescribeCluster`.
+
+Create the policy JSON:
+```powershell
+'{"Version":"2012-10-17","Statement":[{"Sid":"EKSDescribeCluster","Effect":"Allow","Action":["eks:DescribeCluster"],"Resource":"arn:aws:eks:ap-south-1:551322107788:cluster/my-cluster"}]}' | Out-File -FilePath .\eks-describe-cluster-policy.json -Encoding ascii
+```
+
+Verify:
+```powershell
+Get-Content .\eks-describe-cluster-policy.json
+```
+
+Create the policy:
+```bash
+aws iam create-policy --policy-name GitHubActionsEKSDescribeClusterPolicy --policy-document file://eks-describe-cluster-policy.json
+```
+If it already exists, that is fine.
+
+## 8) Attach the IAM policy to the role
+
+The safe version is:
+```powershell
+$POLICY_ARN1="arn:aws:iam::551322107788:policy/GitHubActionsEKSDescribeClusterPolicy"
+aws iam attach-role-policy --role-name GitHubActionsEKSDeployRoleQA --policy-arn $POLICY_ARN1
+```
+
+Verify:
+```bash
+aws iam list-attached-role-policies --role-name GitHubActionsEKSDeployRoleQA
+```
+Your output already confirms this is attached.
+
+## 9) Ensure EKS authentication mode supports access entries
+
+Check:
+```bash
+aws eks describe-cluster --name my-cluster --region ap-south-1 --query "cluster.accessConfig.authenticationMode" --output text
+```
+
+If it returns `CONFIG_MAP`, change it:
+```bash
+aws eks update-cluster-config --name my-cluster --region ap-south-1 --access-config authenticationMode=API_AND_CONFIG_MAP
+```
+
+Wait until cluster is active:
+```bash
+aws eks describe-cluster --name my-cluster --region ap-south-1 --query "cluster.status" --output text
+```
+AWS documents that access entries require `API_AND_CONFIG_MAP` or `API`.
+
+In your case, this is already done:
+* `API_AND_CONFIG_MAP`
+* `ACTIVE`
+
+## 10) Create the EKS access entry
+
+Create it:
+```bash
+aws eks create-access-entry --cluster-name my-cluster --region ap-south-1 --principal-arn arn:aws:iam::551322107788:role/GitHubActionsEKSDeployRoleQA
+```
+
+Verify:
+```bash
+aws eks describe-access-entry --cluster-name my-cluster --region ap-south-1 --principal-arn arn:aws:iam::551322107788:role/GitHubActionsEKSDeployRoleQA
+```
+Your output already confirms this exists.
+An access entry is what allows that IAM principal to authenticate to the cluster without maintaining `aws-auth` entries manually.
+
+## 11) Associate a namespace-scoped EKS access policy
+
+Associate the AWS-managed edit policy, but only for namespace project:
+```bash
+aws eks associate-access-policy --cluster-name my-cluster --region ap-south-1 --principal-arn arn:aws:iam::551322107788:role/GitHubActionsEKSDeployRoleQA --policy-arn arn:aws:eks::aws:cluster-access-policy/AmazonEKSEditPolicy --access-scope type=namespace,namespaces=qa
+```
+
+Verify:
+```bash
+aws eks list-associated-access-policies --cluster-name my-cluster --region ap-south-1 --principal-arn arn:aws:iam::551322107788:role/GitHubActionsEKSDeployRoleQA
+```
+AWS supports namespace-scoped access policies for access entries, which is exactly what you configured.
+
+Your output already confirms:
+* `policy = AmazonEKSEditPolicy`
+* `scope = namespace`
+* `namespace = project`
+
+## 12) GitHub repository setup
+
+Create this repo secret:
+`AWS_ROLE_TO_ASSUME`
+
+Value:
+`arn:aws:iam::551322107788:role/GitHubActionsEKSDeployRoleQA`
+
+You no longer need:
+* `KUBE_CONFIG_B64`
+* `K8S_SERVER`
+* `K8S_CA_CERT`
+* `K8S_TOKEN`
+
+Those were only for the old kubeconfig-based flow.
+
+```bash
+kubectl create secret docker-registry regcred --docker-username=devopsshack --docker-password=Dockerhub@888 --docker-email=devopsshack2025@gmail.com -n qa
+```
