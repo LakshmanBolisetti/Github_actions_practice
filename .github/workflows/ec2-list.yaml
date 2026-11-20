@@ -1,9 +1,6 @@
 name: List EC2 Instances
 
-on:
-  push:
-    branches:
-      - master
+on: workflow_dispatch
 
 permissions:
   id-token: write
